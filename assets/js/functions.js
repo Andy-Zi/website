@@ -4,6 +4,19 @@ document.addEventListener('DOMContentLoaded', function() {
   var canScroll = true,
       scrollController = null;
 
+  var urlParams = new URLSearchParams(window.location.search);
+  var section = urlParams.get('section');
+  if (section) {
+    console.log('section', section);
+    var sideNav = document.querySelector('.side-nav');
+    var curActive = sideNav.querySelector('.is-active');
+    var curPos = Array.prototype.indexOf.call(sideNav.children, curActive);
+    var lastItem = sideNav.children.length - 1;
+    section -= 1;
+    updateNavs(section);
+    updateContent(curPos, section, lastItem);
+  }
+
   document.addEventListener('wheel', function(e) {
     var outerNav = document.querySelector('.outer-nav');
     if (!outerNav.classList.contains('is-vis')) {
@@ -120,6 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (outerNavChildren[nextPos]) {
       outerNavChildren[nextPos].classList.add('is-active');
     }
+  // Update the URL with the current section
+  history.pushState({}, '', '?section=' + (nextPos + 1));
   }
 
   // update main content area
